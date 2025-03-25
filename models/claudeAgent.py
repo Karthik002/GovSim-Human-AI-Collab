@@ -21,7 +21,7 @@ class ClaudeAgent():
         ]
 
         self.client = anthropic.Anthropic(
-            api_key=''
+
         )
 
         completion = self.client.messages.create(

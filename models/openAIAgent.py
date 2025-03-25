@@ -11,7 +11,7 @@ class OpenAIAgent():
         ]
 
         self.client = OpenAI(
-            api_key=''
+
         )
         
         completion = self.client.chat.completions.create(
