@@ -15,6 +15,7 @@ class Pasture_Environment():
         self.hazelMonthlyConsumption = []
         self.frankMonthlyConsumption = []
         self.monthlyConsumption = []
+        self.endMessage = ""
 
 
     def run_simulation(self):
@@ -24,10 +25,12 @@ class Pasture_Environment():
         
         if self.currentResources > params.MIN_RESOURCES:
             print("experiment finished successfully!")
-            print(self.agent.send_message("The simulation has been completed successfully. What are your thoughts about how it went and what could have been done differently?"))
+            self.endMessage = self.agent.send_message("The simulation has been completed successfully. What are your thoughts about how it went and what could have been done differently? Give me the answer in 2-3 sentences.")
+            print(self.endMessage)
         else:
             print("experiment failed!")
-            print(self.agent.send_message("The simulation has failed. What are your thoughts about how it went and what could have been done differently?"))
+            self.endMessage = self.agent.send_message("The simulation has failed. What are your thoughts about how it went and what could have been done differently? Give me the answer in 2-3 sentences.")
+            print(self.endMessage)
 
         print("\nAgent Harvests: ")
         print(self.agentMonthlyConsumption)
@@ -90,9 +93,14 @@ class Pasture_Environment():
     def output_data(self, fileName):
         
         months = []
+        endMessageList = []
+        
         for i in range(len(self.monthlyConsumption)):
             months.append(i+1)
+            endMessageList.append("-")
+        
+        endMessageList[-1] = self.endMessage
 
-        df = pd.DataFrame(list(zip(months, self.agentMonthlyConsumption, self.percyMonthlyConsumption, self.hazelMonthlyConsumption, self.frankMonthlyConsumption)), columns=["Month", "Agent", "Percy", "Hazel", "Frank"])
+        df = pd.DataFrame(list(zip(months, self.agentMonthlyConsumption, self.percyMonthlyConsumption, self.hazelMonthlyConsumption, self.frankMonthlyConsumption, endMessageList)), columns=["Month", "Agent", "Percy", "Hazel", "Frank", "End Message"])
         print(df)
         df.to_csv(fileName, header=False, index=False)

@@ -15,6 +15,7 @@ class Fishing_Environment():
         self.hazelMonthlyHarvests = []
         self.frankMonthlyHarvests = []
         self.monthlyHarvests = []
+        self.endMessage = ""
 
 
     def run_simulation(self):
@@ -24,10 +25,12 @@ class Fishing_Environment():
         
         if self.currentResources > params.MIN_RESOURCES:
             print("experiment finished successfully!")
-            print(self.agent.send_message("The simulation has been completed successfully. What are your thoughts about how it went and what could have been done differently?"))
+            self.endMessage = self.agent.send_message("The simulation has been completed successfully. What are your thoughts about how it went and what could have been done differently? Give me the anaswer in 2-3 sentences.")
+            print(self.endMessage)
         else:
             print("experiment failed!")
-            print(self.agent.send_message("The simulation has failed. What are your thoughts about how it went and what could have been done differently?"))
+            self.endMessage = self.agent.send_message("The simulation has failed. What are your thoughts about how it went and what could have been done differently? Give me the answer in 2-3 sentences.")
+            print(self.endMessage)
 
         print("\nAgent Harvests: ")
         print(self.agentMonthlyHarvests)
@@ -90,10 +93,15 @@ class Fishing_Environment():
     def output_data(self, fileName):
 
         months = []
+        endMessageList = []
+        
         for i in range(len(self.monthlyHarvests)):
             months.append(i+1)
+            endMessageList.append("-")
+        
+        endMessageList[-1] = self.endMessage
 
-        df = pd.DataFrame(list(zip(months, self.agentMonthlyHarvests, self.percyMonthlyHarvests, self.hazelMonthlyHarvests, self.frankMonthlyHarvests)), columns=["Month", "Agent", "Percy", "Hazel", "Frank"])
+        df = pd.DataFrame(list(zip(months, self.agentMonthlyHarvests, self.percyMonthlyHarvests, self.hazelMonthlyHarvests, self.frankMonthlyHarvests, endMessageList)), columns=["Month", "Agent", "Percy", "Hazel", "Frank", "End Message"])
         print(df)
         df.to_csv(fileName, header=False, index=False)
 
