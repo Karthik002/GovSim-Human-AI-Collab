@@ -19,10 +19,8 @@ class ClaudeAgent():
                 ]
             }
         ]
-
-        self.client = anthropic.Anthropic(
-            api_key='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'
-        )
+        
+        # Anthropic key code omitted
 
         completion = self.client.messages.create(
             model = model,
